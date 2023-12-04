@@ -11,9 +11,7 @@ const IndexPage = () => {
   const [messages, setMessages] = useState<messageType[]>(
     []
   );
-  console.log(messages)
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     const channel = pusher.subscribe('my-channel');
     channel.bind('my-event', (data: { message: string, userName: string }) => {
