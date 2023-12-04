@@ -16,7 +16,7 @@ const IndexPage = () => {
 
   useEffect(() => {
     const channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', (data: any) => {
+    channel.bind('my-event', (data: { message: string, userName: string }) => {
       setMessages((pre: any) => {
         let newMessage;
         if (data.userName === userName) {
