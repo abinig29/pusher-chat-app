@@ -2,21 +2,18 @@
 import { useState, useEffect, useRef } from 'react';
 import pusher from '@/lib/pusher';
 import { ChatForm } from './_component/chat-form';
-type messageType = {
-  msg: string, align: 'left' | 'right'
-}
+import ChatPreview from './_component/chat-preview';
+import { messageType } from '@/type/message';
+
 const IndexPage = () => {
   const [userName, setUserName] = useState("")
   const [startMessage, setStartMessage] = useState(false)
-
   const [messages, setMessages] = useState<messageType[]>(
-    [
-      // { msg: "hi there", align: "left" },
-      // { msg: "hi man", align: "right" },
-      // { msg: "hi man", align: "right" },
-    ]
+    []
   );
+  console.log(messages)
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const channel = pusher.subscribe('my-channel');
     channel.bind('my-event', (data: any) => {
@@ -47,7 +44,6 @@ const IndexPage = () => {
       {!startMessage ? <div className='flex gap-2 items-center '>
         <input
           type="text"
-          placeholder="Type your message"
           value={userName}
           className='w-full border rounded-full px-4 py-2 '
           onChange={(e) => setUserName(e.target.value)}
@@ -63,17 +59,7 @@ const IndexPage = () => {
 
 
 
-      <div className='h-[300px] bg-slate-600/10 min-w-[400px] p-10 overflow-y-auto flex flex-col items-start gap-3 scroller-hidden' ref={chatContainerRef}>
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`bg-slate-800 text-white px-3 py-1 
-             ${msg.align === `right` ? `self-end rounded-l-full  rounded-tr-full` : `rounded-r-full  rounded-tl-full`}`}
-          >
-            <h4>{msg.msg}</h4>
-          </div>
-        ))}
-      </div>
+      <ChatPreview messages={messages} ref={chatContainerRef} />
       <ChatForm userName={userName} disable={!startMessage} />
     </div>
   );
